@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>🚀 Rocket Candle: Monad Edition</title>
+    <link rel="stylesheet" type="text/css" href="/css/landing.css" />
+  </head>
+  <body>
+    <!-- Floating Rockets Background -->
+    <div class="floating-rockets">
+      <div class="floating-rocket">🚀</div>
+      <div class="floating-rocket">🚀</div>
+      <div class="floating-rocket">🚀</div>
+      <div class="floating-rocket">🚀</div>
+      <div class="floating-candle">🕯️</div>
+      <div class="floating-candle">🕯️</div>
+      <div class="floating-candle">🕯️</div>
+      <div class="floating-candle">🕯️</div>
+    </div>
+
+    <!-- Landing Page -->
+    <div id="landing" class="landing-container">
+      <section class="hero-section; margin-bottom: 0px;">
+        <div class="monad-logo">M</div>
+        <h1 class="hero-title">🚀 Rocket Candle</h1>
+        <p class="hero-subtitle">
+          Blast through candlestick barriers and earn FUEL tokens on the Monad
+          blockchain! Master physics-based gameplay in this revolutionary Web3
+          gaming experience.
+        </p>
+      </section>
+
+      <section class="cta-section">
+        <!-- Wallet Connection Section -->
+        <div id="wallet-section" class="wallet-section">
+          <button
+            id="connect-wallet-btn"
+            class="play-button"
+            onclick="connectWallet()"
+          >
+            🔒 Connect Wallet
+          </button>
+          <div class="wallet-info">
+            <p><strong>🔒 Connect your wallet to:</strong></p>
+            <p>
+              • Save scores on-chain<br />
+              • Earn FUEL tokens<br />
+              • Access leaderboards
+            </p>
+            <p>
+              <small
+                >Supports MetaMask and WalletConnect on Monad Testnet</small
+              >
+            </p>
+          </div>
+        </div>
+
+        <!-- Dashboard Section (hidden initially) -->
+        <div id="dashboard-section" class="dashboard-section">
+          <button class="play-button" onclick="startGame()">
+            🚀 Start Playing
+          </button>
+          <div class="wallet-connected-info">
+            <div class="info-card wallet-status">
+              <h3>🔗 Wallet Connected</h3>
+              <p id="wallet-address">Address: Loading...</p>
+              <p id="fuel-balance">FUEL Balance: Loading...</p>
+            </div>
+
+            <div class="info-card leaderboard-container">
+              <h3>🏆 Leaderboard</h3>
+              <div id="leaderboard-list">
+                <div class="loading-state">
+                  <div class="loading-spinner"></div>
+                  <p>Loading leaderboard...</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="info-card player-stats">
+              <h3>📊 Your Stats</h3>
+              <div id="player-scores">
+                <div class="loading-state">
+                  <div class="loading-spinner"></div>
+                  <p>Loading your stats...</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- <button class="play-button" onclick="startGame()">
+            🚀 Start Playing
+          </button> -->
+        </div>
+      </section>
+
+      <section class="content-section">
+        <div class="features">
+          <div class="feature-card">
+            <div class="feature-icon">🎯</div>
+            <div class="feature-title">Physics Puzzle Game</div>
+            <p>
+              Master trajectory and timing to destroy enemies hidden in market
+              data structures.
+            </p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">📈</div>
+            <div class="feature-title">Market-Based Levels</div>
+            <p>
+              Navigate through 7 procedurally generated levels based on
+              candlestick patterns.
+            </p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">🔗</div>
+            <div class="feature-title">Blockchain Integration</div>
+            <p>
+              Scores stored on Monad blockchain with FUEL token rewards for
+              achievements.
+            </p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">🏆</div>
+            <div class="feature-title">Compete & Earn</div>
+            <p>
+              Climb the leaderboard and earn rewards for your gameplay skills.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <footer class="footer">
+        <p>Developed at Monad Blitz 💜</p>
+        <p>
+          <a
+            href="https://github.com/ironicdegawd"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            github.com/ironicdegawd
+          </a>
+        </p>
+      </footer>
+    </div>
+
+    <!-- Game Container -->
+    <div id="game-container" class="game-container">
+      <div id="app"></div>
+    </div>
+
+    <script type="module">
+      import { walletManager } from "./src/services/WalletManager.js";
+      import { web3Service } from "./src/services/Web3Service.js";
+
+      let isWalletConnected = false;
+      let connectedAddress = null;
+
+      // Initialize wallet services
+      async function initializeWalletServices() {
+        try {
+          console.log("🔄 Initializing wallet services...");
+
+          // Use the singleton walletManager instance
+
+          // Set up connection change handler
+          walletManager.onConnectionChange = (isConnected, address) => {
+            isWalletConnected = isConnected;
+            connectedAddress = address;
+
+            if (isConnected) {
+              web3Service.setWallet(address);
+            }
+
+            updateUIState();
+
+            if (isConnected) {
+              loadDashboardData();
+            }
+          };
+
+          // Check if wallet is already connected
+          if (
+            walletManager.checkConnection &&
+            typeof walletManager.checkConnection === "function"
+          ) {
+            const isAlreadyConnected = await walletManager.checkConnection();
+            if (isAlreadyConnected) {
+              isWalletConnected = true;
+              connectedAddress = walletManager.address;
+              web3Service.setWallet(connectedAddress);
+              updateUIState();
+              loadDashboardData();
+            }
+          }
+
+          console.log("✅ Wallet services initialized");
+        } catch (error) {
+          console.error("❌ Failed to initialize wallet services:", error);
+        }
+      }
+
+      // Connect wallet function
+      async function connectWallet() {
+        const connectBtn = document.getElementById("connect-wallet-btn");
+        connectBtn.textContent = "🔄 Connecting...";
+        connectBtn.classList.add("connecting");
+
+        try {
+          if (!walletManager) {
+            throw new Error("Wallet manager not initialized");
+          }
+
+          // Connect wallet using WalletManager
+          await walletManager.connectWallet();
+
+          console.log("✅ Wallet connected successfully");
+          connectBtn.classList.add("success-glow");
+
+          // UI will be updated via the onConnectionChange callback
+        } catch (error) {
+          console.error("❌ Wallet connection failed:", error);
+          connectBtn.textContent = "❌ Connection Failed";
+          connectBtn.classList.remove("connecting");
+
+          // Show user-friendly error message
+          let errorMessage = "Failed to connect wallet";
+          if (error.message.includes("not available")) {
+            errorMessage = "Please install MetaMask or another Web3 wallet";
+          } else if (error.message.includes("rejected")) {
+            errorMessage = "Connection rejected by user";
+          }
+
+          setTimeout(() => {
+            connectBtn.textContent = "🔒 Connect Wallet";
+            alert(errorMessage);
+          }, 2000);
+        }
+      }
+
+      // Update UI based on wallet connection state
+      function updateUIState() {
+        const walletSection = document.getElementById("wallet-section");
+        const dashboardSection = document.getElementById("dashboard-section");
+
+        if (isWalletConnected && connectedAddress) {
+          walletSection.style.display = "none";
+          dashboardSection.classList.remove("hidden");
+          dashboardSection.classList.add("flex");
+
+          // Update wallet info
+          const shortAddress = `${connectedAddress.slice(
+            0,
+            6
+          )}...${connectedAddress.slice(-4)}`;
+          document.getElementById(
+            "wallet-address"
+          ).textContent = `Address: ${shortAddress}`;
+        } else {
+          walletSection.style.display = "flex";
+          dashboardSection.classList.add("hidden");
+          dashboardSection.classList.remove("flex");
+        }
+      }
+
+      // Load dashboard data (leaderboard and player stats)
+      async function loadDashboardData() {
+        if (!isWalletConnected || !connectedAddress) return;
+
+        try {
+          // Load FUEL balance
+          await loadFuelBalance();
+
+          // Load leaderboard and player stats in parallel
+          const [leaderboardData, playerScoresData] = await Promise.allSettled([
+            loadLeaderboard(),
+            loadPlayerStats(),
+          ]);
+
+          if (leaderboardData.status === "fulfilled") {
+            displayLeaderboard(leaderboardData.value);
+          } else {
+            console.error(
+              "Failed to load leaderboard:",
+              leaderboardData.reason
+            );
+            displayLeaderboard([]);
+          }
+
+          if (playerScoresData.status === "fulfilled") {
+            displayPlayerStats(playerScoresData.value);
+          } else {
+            console.error(
+              "Failed to load player stats:",
+              playerScoresData.reason
+            );
+            displayPlayerStats([]);
+          }
+        } catch (error) {
+          console.error("❌ Failed to load dashboard data:", error);
+          // Show error state
+          document.getElementById("fuel-balance").textContent =
+            "FUEL Balance: Error loading";
+          displayLeaderboard([]);
+          displayPlayerStats([]);
+        }
+      }
+
+      // Load FUEL balance
+      async function loadFuelBalance() {
+        try {
+          const balanceData = await web3Service.getFuelBalance(
+            connectedAddress
+          );
+          const balance = balanceData.balance || 0;
+
+          document.getElementById(
+            "fuel-balance"
+          ).textContent = `FUEL Balance: ${balance.toFixed(2)}`;
+
+          // Update wallet manager balance
+          if (walletManager) {
+            walletManager.fuelBalance = balance;
+          }
+        } catch (error) {
+          console.error("Failed to load FUEL balance:", error);
+          document.getElementById("fuel-balance").textContent =
+            "FUEL Balance: Error";
+        }
+      }
+
+      // Load leaderboard data
+      async function loadLeaderboard() {
+        try {
+          const response = await web3Service.getLeaderboard();
+          return response || [];
+        } catch (error) {
+          console.error("Failed to load leaderboard:", error);
+          return [];
+        }
+      }
+
+      // Load player stats
+      async function loadPlayerStats() {
+        try {
+          const response = await web3Service.getPlayerScores(connectedAddress);
+          return response || [];
+        } catch (error) {
+          console.error("Failed to load player stats:", error);
+          return [];
+        }
+      }
+
+      // Display leaderboard
+      function displayLeaderboard(leaderboard) {
+        const leaderboardList = document.getElementById("leaderboard-list");
+
+        if (!leaderboard || leaderboard.length === 0) {
+          leaderboardList.innerHTML =
+            '<div class="empty-state"><p>No scores available yet.</p><p>Be the first to play and earn rewards!</p></div>';
+          return;
+        }
+
+        const leaderboardHTML = leaderboard
+          .map((entry, index) => {
+            const rank = index + 1;
+            const shortAddress = `${entry.player.slice(
+              0,
+              6
+            )}...${entry.player.slice(-4)}`;
+
+            // Highlight current player
+            const isCurrentPlayer =
+              entry.player.toLowerCase() === connectedAddress?.toLowerCase();
+            const itemClass = isCurrentPlayer
+              ? "leaderboard-item current-player"
+              : "leaderboard-item";
+
+            return `
+              <div class="${itemClass}">
+                <div class="leaderboard-info">
+                  <span class="leaderboard-rank">#${rank}</span>
+                  <span class="leaderboard-address mono">${shortAddress}${
+              isCurrentPlayer ? " (You)" : ""
+            }</span>
+                </div>
+                <span class="leaderboard-score">${entry.score.toLocaleString()}</span>
+              </div>
+            `;
+          })
+          .join("");
+
+        leaderboardList.innerHTML = leaderboardHTML;
+      }
+
+      // Display player stats
+      function displayPlayerStats(scores) {
+        const playerScoresDiv = document.getElementById("player-scores");
+
+        if (!scores || scores.length === 0) {
+          playerScoresDiv.innerHTML = `
+            <div class="empty-state">
+              <p>No scores recorded yet.</p>
+              <p>Play to earn your first score and FUEL rewards!</p>
+            </div>
+          `;
+          return;
+        }
+
+        // Calculate stats
+        const sortedScores = scores.sort((a, b) => b.score - a.score);
+        const bestScore = sortedScores[0].score;
+        const totalGames = scores.length;
+        const averageScore = Math.round(
+          scores.reduce((sum, s) => sum + s.score, 0) / totalGames
+        );
+
+        // Get recent scores (last 3)
+        const recentScores = scores
+          .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
+          .slice(0, 3);
+
+        const statsHTML = `
+          <div class="stats-grid">
+            <div class="stat-item">
+              <span class="stat-label">Best Score</span>
+              <span class="stat-value">${bestScore.toLocaleString()}</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">Total Games</span>
+              <span class="stat-value">${totalGames}</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">Average Score</span>
+              <span class="stat-value">${averageScore.toLocaleString()}</span>
+            </div>
+          </div>
+          <div class="recent-scores">
+            <h4>Recent Scores</h4>
+            ${recentScores
+              .map(
+                (score) => `
+              <div class="recent-score-item">
+                <span class="score">${score.score.toLocaleString()}</span>
+                <span class="date">${new Date(
+                  score.timestamp
+                ).toLocaleDateString()}</span>
+              </div>
+            `
+              )
+              .join("")}
+          </div>
+        `;
+
+        playerScoresDiv.innerHTML = statsHTML;
+      }
+
+      // Start game function - only works if wallet is connected
+      function startGame() {
+        if (!isWalletConnected) {
+          alert("Please connect your wallet first!");
+          return;
+        }
+
+        // Ensure wallet manager state is synchronized
+        if (walletManager && connectedAddress) {
+          // Make sure the singleton has the correct state
+          walletManager.isConnected = true;
+          walletManager.address = connectedAddress;
+          web3Service.setWallet(connectedAddress);
+
+          console.log(
+            "🔄 Synchronized wallet state for game:",
+            connectedAddress
+          );
+        }
+
+        // Hide landing page
+        document.getElementById("landing").style.display = "none";
+        // Show game container
+        document.getElementById("game-container").style.display = "block";
+
+        // Initialize game (if main.js exists)
+        try {
+          import("/src/main.js").catch(() => {
+            console.log("Game module not found - would initialize game here");
+          });
+        } catch (error) {
+          console.log("Game initialization placeholder");
+        }
+      }
+
+      // Initialize wallet services when page loads
+      document.addEventListener("DOMContentLoaded", () => {
+        initializeWalletServices();
+      });
+
+      // Make functions globally available for HTML onclick handlers
+      window.connectWallet = connectWallet;
+      window.startGame = startGame;
+    </script>
+  </body>
+</html>

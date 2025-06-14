@@ -1,0 +1,26 @@
+# === Foundry (forge) ===
+out/
+cache/
+broadcast/
+artifacts/
+
+# === Node/npm (if using TypeScript/JS tooling) ===
+node_modules/
+package-lock.json
+yarn.lock
+
+# === Environment files ===
+.env
+.env.local
+.env.*.local
+
+# === VSCode settings (optional) ===
+.vscode/
+
+# === Mac system files ===
+.DS_Store
+
+# === Hardhat (optional, in case of dual setup) ===
+typechain/
+coverage/
+coverage.json

@@ -1,0 +1,11 @@
+[profile.default]
+src = "src"
+out = "out"
+libs = ["lib"]
+remappings = ["@openzeppelin/contracts/=lib/openzeppelin-contracts/contracts/"]
+
+# Monad Testnet Configuration
+[rpc_endpoints]
+monad_testnet = "https://testnet-rpc.monad.xyz/"
+
+# See more config options https://github.com/foundry-rs/foundry/tree/master/config

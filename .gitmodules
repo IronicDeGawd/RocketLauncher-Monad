@@ -1,0 +1,6 @@
+[submodule "rocket-candle-contracts/lib/forge-std"]
+	path = rocket-candle-contracts/lib/forge-std
+	url = https://github.com/foundry-rs/forge-std
+[submodule "rocket-candle-contracts/lib/openzeppelin-contracts"]
+	path = rocket-candle-contracts/lib/openzeppelin-contracts
+	url = https://github.com/OpenZeppelin/openzeppelin-contracts
