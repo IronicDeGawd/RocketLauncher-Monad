@@ -152,6 +152,53 @@
     <!-- Game Container -->
     <div id="game-container" class="game-container">
       <div id="app"></div>
+      
+      <!-- Game Mechanics Information Panel - Now inside game container -->
+      <div id="game-mechanics" class="game-mechanics-panel">
+      <div class="mechanics-container">
+        <h3>🎮 Game Controls & Mechanics</h3>
+        <div class="mechanics-grid">
+          <div class="control-section">
+            <h4>🎯 Controls</h4>
+            <div class="control-item">
+              <img src="assets/buttons/w.png" alt="W key" class="key-icon small-key" />
+              <img src="assets/buttons/s.png" alt="S key" class="key-icon small-key" />
+              <span class="key-description">Angle Adjustment</span>
+            </div>
+            <div class="control-item">
+              <img src="assets/buttons/a.png" alt="A key" class="key-icon small-key" />
+              <img src="assets/buttons/d.png" alt="D key" class="key-icon small-key" />
+              <span class="key-description">Power Adjustment</span>
+            </div>
+            <div class="control-item">
+              <img src="assets/buttons/space.png" alt="Space key" class="key-icon space-key small-space" />
+              <span class="key-description">Launch Rocket</span>
+            </div>
+          </div>
+          <div class="targets-section">
+            <h4>🎯 Targets & Obstacles</h4>
+            <div class="target-item">
+              <img src="assets/enemies/var1.png" alt="Enemy" class="target-icon small-sprite" />
+              <span class="target-description">Enemy Characters - Destroy these to win!</span>
+            </div>
+            <div class="target-item">
+              <img src="assets/blocks/greencandle.png" alt="Green barrier" class="target-icon small-sprite" />
+              <img src="assets/blocks/redcandle.png" alt="Red barrier" class="target-icon small-sprite" />
+              <span class="target-description">Candlestick Barriers - Avoid or navigate around</span>
+            </div>
+            <div class="target-item">
+              <img src="assets/blocks/dest.png" alt="Destructible block" class="target-icon small-sprite" />
+              <span class="target-description">Destructible Blocks - Can be destroyed</span>
+            </div>
+          </div>
+        </div>
+        <div class="tip-section">
+          <p>
+            💡 <strong>Tip:</strong> Use the angle and power sliders or keyboard
+            controls to aim precisely. You have limited attempts per level!
+          </p>
+        </div>
+      </div>
     </div>
 
     <script type="module">
@@ -484,6 +531,8 @@
         document.getElementById("landing").style.display = "none";
         // Show game container
         document.getElementById("game-container").style.display = "block";
+        // Show game mechanics panel
+        document.getElementById("game-mechanics").style.display = "block";
 
         // Initialize game (if main.js exists)
         try {

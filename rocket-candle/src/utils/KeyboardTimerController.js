@@ -43,7 +43,7 @@ export class KeyboardTimerController {
     // Create keyboard input cursors for arrow keys and WASD
     this.keys = this.scene.input.keyboard.addKeys({
       W: Phaser.Input.Keyboard.KeyCodes.W,
-      E: Phaser.Input.Keyboard.KeyCodes.E,
+      A: Phaser.Input.Keyboard.KeyCodes.A,
       S: Phaser.Input.Keyboard.KeyCodes.S,
       D: Phaser.Input.Keyboard.KeyCodes.D,
       SPACE: Phaser.Input.Keyboard.KeyCodes.SPACE,
@@ -53,7 +53,7 @@ export class KeyboardTimerController {
     this.setupKeyPressEvents();
 
     console.log(
-      "⌨️ Keyboard controls configured: W/E for angle, S/D for power, SPACE for launch"
+      "⌨️ Keyboard controls configured: W/S for power, A/D for angle, SPACE for launch"
     );
   }
 
@@ -64,7 +64,7 @@ export class KeyboardTimerController {
     // Rate limiting variables
     this.lastKeyPressTime = {
       W: 0,
-      E: 0,
+      A: 0,
       S: 0,
       D: 0,
       SPACE: 0,
@@ -100,26 +100,16 @@ export class KeyboardTimerController {
 
     if (!canInteract) return;
 
-    // Handle angle controls (W/E)
+    // Handle power controls (W/S) - W increases, S decreases
     if (
       this.keys.W.isDown &&
       time - this.lastKeyPressTime.W > this.keyRepeatDelay
     ) {
-      this.adjustAngle(this.angleStepSize);
+      this.adjustPower(this.powerStepSize);
       this.lastKeyPressTime.W = time;
       this.startTimer();
     }
 
-    if (
-      this.keys.E.isDown &&
-      time - this.lastKeyPressTime.E > this.keyRepeatDelay
-    ) {
-      this.adjustAngle(-this.angleStepSize);
-      this.lastKeyPressTime.E = time;
-      this.startTimer();
-    }
-
-    // Handle power controls (S/D)
     if (
       this.keys.S.isDown &&
       time - this.lastKeyPressTime.S > this.keyRepeatDelay
@@ -129,11 +119,21 @@ export class KeyboardTimerController {
       this.startTimer();
     }
 
+    // Handle angle controls (A/D) - A decreases (left), D increases (right)
+    if (
+      this.keys.A.isDown &&
+      time - this.lastKeyPressTime.A > this.keyRepeatDelay
+    ) {
+      this.adjustAngle(-this.angleStepSize);
+      this.lastKeyPressTime.A = time;
+      this.startTimer();
+    }
+
     if (
       this.keys.D.isDown &&
       time - this.lastKeyPressTime.D > this.keyRepeatDelay
     ) {
-      this.adjustPower(this.powerStepSize);
+      this.adjustAngle(this.angleStepSize);
       this.lastKeyPressTime.D = time;
       this.startTimer();
     }
@@ -274,7 +274,7 @@ export class KeyboardTimerController {
 
     // Instruction text (positioned below timer text)
     const instructionText = this.scene.add
-      .text(0, 25, "W/E: Angle | S/D: Power | SPACE: Launch", {
+      .text(0, 25, "W/S: Power | A/D: Angle | SPACE: Launch", {
         fontSize: "14px",
         fill: "#aaaaaa",
         fontFamily: "Arial",

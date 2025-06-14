@@ -600,7 +600,8 @@ export class GameScene extends Phaser.Scene {
     const maxRange = this.getMaxPriceRangeForLevel();
     const volatilityFactor = priceRange / maxRange;
 
-    const blockWidth = 25; // Reduced to match thinner candlesticks
+    // Use the same width as barrier blocks for consistency (passed as 'width' parameter = 30px)
+    const blockWidth = width; // Use barrier width (30px) instead of fixed 25px
     const blockHeight = 20;
 
     // Calculate distance from launcher for difficulty scaling
@@ -766,7 +767,7 @@ export class GameScene extends Phaser.Scene {
     // Create launcher sprite using actual launcher image (positioned on left side)
     this.launcher = this.add
       .image(160, this.groundY - 25, "launcher") // Use actual launcher sprite
-      .setOrigin(0.5, 1) // Pivot at bottom center
+      .setOrigin(0.5, 0.5) // Pivot at center for proper rotation
       .setScale(1.2) // Slightly larger launcher
       .setFlipX(true); // Flip horizontally so launcher mouth faces right
 
@@ -824,10 +825,11 @@ export class GameScene extends Phaser.Scene {
       {
         width: 120, // Wider button
         height: 40, // Taller button
-        fontSize: "18px", // Larger font
-        fill: 0x00ff00, // Bright green background
-        hoverFill: 0x00cc00, // Darker green on hover
-        textColor: "#000000", // Black text for contrast
+        fontSize: "20px", // Increased font size for Pixelify Sans
+        fill: 0x8a2be2, // Purple background
+        hoverFill: 0x7b68ee, // Lighter purple on hover
+        textColor: "#ffffff", // White text for contrast
+        fontFamily: "Pixelify Sans, Arial", // Add Pixelify Sans font
       }
     );
 
@@ -842,9 +844,9 @@ export class GameScene extends Phaser.Scene {
    */
   updateLauncherRotation() {
     // Convert angle to radians and apply rotation
-    // Since the launcher mouth points down, rotate 90 degrees counterclockwise to point right
-    // Then apply the launch angle on top of that
-    const baseRotation = -Math.PI / 2; // -90 degrees to point right from down
+    // Since the launcher mouth points down, rotate 25 degrees counterclockwise to point righ8
+    // (45 - 20 = 25 degrees, adding 20 degrees clockwise from previous position)
+    const baseRotation = -Math.PI / 8; // -25 degrees (45 - 20 = 25)
     const angleRad = Phaser.Math.DegToRad(-this.launchAngle) + baseRotation;
     this.launcher.setRotation(angleRad);
   }

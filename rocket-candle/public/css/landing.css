@@ -1107,7 +1107,196 @@
         }
       }
 
-      /* === UTILITY CLASSES === */
+      /* === GAME MECHANICS PANEL === */
+      .game-mechanics-panel {
+        display: none; /* Hidden by default, shown when game is active */
+        width: 100%;
+        padding: var(--space-lg) var(--space-lg);
+        background: var(--bg-secondary);
+        border-top: 1px solid var(--glass-border);
+        margin-top: var(--space-lg); /* Add some spacing from the game canvas */
+      }
+
+      .mechanics-container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: var(--space-lg);
+        background: var(--glass-bg);
+        border: 1px solid var(--glass-border);
+        border-radius: var(--radius-xl);
+        backdrop-filter: blur(10px);
+      }
+
+      .mechanics-container h3 {
+        color: var(--text-primary);
+        font-size: var(--font-size-xl);
+        font-weight: 700;
+        margin-bottom: var(--space-lg);
+        text-align: center;
+        font-family: var(--font-family);
+      }
+
+      .mechanics-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: var(--space-xl);
+        margin-bottom: var(--space-lg);
+      }
+
+      .control-section h4,
+      .targets-section h4 {
+        color: var(--text-secondary);
+        font-size: var(--font-size-base);
+        font-weight: 600;
+        margin-bottom: var(--space-md);
+        font-family: var(--font-family);
+      }
+
+      .control-item,
+      .target-item {
+        display: flex;
+        align-items: center;
+        gap: var(--space-sm);
+        padding: var(--space-sm);
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid var(--glass-border);
+        border-radius: var(--radius-lg);
+        margin-bottom: var(--space-xs);
+        transition: var(--transition-base);
+      }
+
+      .control-item:hover,
+      .target-item:hover {
+        background: rgba(255, 255, 255, 0.05);
+        border-color: var(--glass-border-hover);
+      }
+
+      .key-combo {
+        background: var(--primary-purple);
+        color: white;
+        padding: var(--space-xs) var(--space-sm);
+        border-radius: var(--radius-md);
+        font-family: "Inter", monospace;
+        font-weight: 600;
+        font-size: var(--font-size-sm);
+        min-width: 70px;
+        text-align: center;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      }
+
+      .key-icon {
+        width: 32px;
+        height: 32px;
+        object-fit: contain;
+        image-rendering: pixelated;
+        border-radius: var(--radius-sm);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      }
+
+      .key-icon.small-key {
+        width: 20px;
+        height: 20px;
+      }
+
+      .key-icon.space-key {
+        width: 64px; /* Space key is wider */
+      }
+
+      .key-icon.small-space {
+        width: 40px; /* Smaller space key */
+        height: 20px;
+      }
+
+      .target-icon {
+        width: 28px;
+        height: 28px;
+        object-fit: contain;
+        image-rendering: pixelated;
+        border-radius: var(--radius-sm);
+      }
+
+      .target-icon.small-sprite {
+        width: 18px;
+        height: 18px;
+      }
+
+      .key-description {
+        color: var(--text-secondary);
+        font-size: var(--font-size-base);
+        font-family: var(--font-family);
+      }
+
+      .target-sprite {
+        font-size: var(--font-size-xl);
+        min-width: 40px;
+        text-align: center;
+      }
+
+      .target-description {
+        color: var(--text-secondary);
+        font-size: var(--font-size-base);
+        font-family: var(--font-family);
+      }
+
+      .tip-section {
+        padding: var(--space-md);
+        background: rgba(255, 170, 0, 0.1);
+        border: 1px solid rgba(255, 170, 0, 0.3);
+        border-radius: var(--radius-lg);
+        text-align: center;
+      }
+
+      .tip-section p {
+        color: var(--text-secondary);
+        font-size: var(--font-size-sm);
+        font-family: var(--font-family);
+        margin: 0;
+      }
+
+      .tip-section strong {
+        color: var(--accent-gold);
+      }
+
+      /* Responsive design for game mechanics panel */
+      @media (max-width: 768px) {
+        .mechanics-grid {
+          grid-template-columns: 1fr;
+          gap: var(--space-md);
+        }
+
+        .mechanics-container {
+          padding: var(--space-md);
+        }
+
+        .control-item,
+        .target-item {
+          flex-direction: row;
+          text-align: left;
+          gap: var(--space-xs);
+          padding: var(--space-xs);
+        }
+
+        .key-combo {
+          min-width: auto;
+        }
+
+        .key-icon.small-key {
+          width: 16px;
+          height: 16px;
+        }
+
+        .key-icon.small-space {
+          width: 32px;
+          height: 16px;
+        }
+
+        .target-icon.small-sprite {
+          width: 14px;
+          height: 14px;
+        }
+      }
+
+      /* === EXISTING UTILITY CLASSES === */
       .mono {
         font-family: "Inter", monospace;
       }
